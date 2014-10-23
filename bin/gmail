@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Fetches recent incoming emails from gmail and formats them
+# Usage: $ gmail
+gmail() {
+  if [ -z "$GMAIL_ADDRESS" ] || [ -z "$GMAIL_PASSWORD" ]
+  then
+    echo 'Set your email and password.'
+    echo '`$ export GMAIL_ADDRESS="<me@gmail.com>"`'
+    echo '`$ export GMAIL_PASSWORD="<mypassword123>"`'
+  else
+    echo ''
+    curl -u $GMAIL_ADDRESS:$GMAIL_PASSWORD \
+      --silent "https://mail.google.com/mail/feed/atom" | \
+      xpath '//feed/entry/author/email | //feed/entry/title' \
+      2>/dev/null | \
+      sed -e 's/<title>\([^<]*\)<\/title><email>\([^<]*\)<\/email>/\2;;;\1###/g' | \
+      tr '###' '\n' |
+      column -t -s ';;;'
+    echo ''
+  fi
+}
+
+gmail

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Sends an email from the Command Line
+# Usage: $ email "blah@blah.com" "Subject line" "Content of email"
+email() {
+  if [ -z "$1" ] || [ -z "$3" ]
+  then
+    echo 'Set an address to send to, subject line, and content.'
+    echo '`$ email "recipient@email.com" "Subject Line" "Content of Email"`'
+  else
+    TO="$1"; SUBJECT="$2"; BODY="$3"
+    echo "$BODY" | mail -b "$GMAIL_ADDRESS" -s "$SUBJECT" "$TO"
+  fi
+}
+
+email "$1" "$2" "$3"
